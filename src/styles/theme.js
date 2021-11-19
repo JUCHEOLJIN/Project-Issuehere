@@ -1,7 +1,8 @@
 const theme = {
-  stonee: '#eeeee',
+  stone: '#eeeeee',
   black: '#2d2d2d',
-  white: '#fffff',
+  white: '#ffffff',
+  skyblue: '#6AB4F7',
 };
 
 export default theme;
