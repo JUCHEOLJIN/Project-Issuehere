@@ -2,13 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import SearchBar from '../SearchBar/SearchBar';
 
-const Nav = () => {
+const Nav = ({ handleChange, handleSearch }) => {
   return (
     <Container>
       <Wrapper>
         <Logo>ISSUE HERE</Logo>
         <SearchBox>
-          <SearchBar />
+          <SearchBar handleChange={handleChange} handleSearch={handleSearch} />
         </SearchBox>
       </Wrapper>
     </Container>

@@ -2,17 +2,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Search } from '@styled-icons/boxicons-regular/Search';
 
-const SearchBar = () => {
-  const [searchValue, setSearchValue] = useState('');
-
-  const handleChange = e => {
-    setSearchValue(e.target.value);
-  };
-
+const SearchBar = ({ handleChange, handleSearch }) => {
   return (
-    <Form>
+    <Form onSubmit={handleSearch}>
       <Input onChange={handleChange} placeholder="검색어를 입력해주세요." />
-      <Button>Enter</Button>
+      <Button>
+        <SearchIcon />
+      </Button>
     </Form>
   );
 };
@@ -33,7 +29,11 @@ const Input = styled.input`
   }
 `;
 
-const Button = styled(Search)`
+const Button = styled.button`
+  cursor: pointer;
+`;
+
+const SearchIcon = styled(Search)`
   width: 24px;
   height: 24px;
   color: ${({ theme }) => theme.stone};
