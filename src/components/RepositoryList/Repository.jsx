@@ -6,6 +6,8 @@ const Repository = ({
   registeredRepos,
   handleRegister,
   handleDelete,
+  getIssue,
+  deleteIssue,
 }) => {
   const isRegistered = registeredRepos.some(item => item.id === repository.id);
 
@@ -23,6 +25,7 @@ const Repository = ({
 
   const handleClick = () => {
     isRegistered ? deleteRepo() : registerRepo();
+    isRegistered ? deleteIssue(repository) : getIssue(repository.full_name);
   };
 
   return (

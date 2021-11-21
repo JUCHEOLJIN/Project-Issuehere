@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import IssueList from '../../components/IssueList/IssueList';
 import Nav from '../../components/Nav/Nav';
 import RegisteredRepos from '../../components/RegisteredRepos/RegisteredRepos';
 import RepositoryList from '../../components/RepositoryList/RepositoryList';
@@ -8,6 +9,8 @@ const Main = () => {
   const [searchValue, setSearchValue] = useState('');
   const [repositories, setRepositories] = useState([]);
   const [registeredRepos, setRegisteredRepos] = useState([]);
+  const [issues, setIssues] = useState([]);
+  const [currentView, setCurrentView] = useState('issue');
 
   useEffect(() => {
     const prevRegisteredRepos =
@@ -15,8 +18,17 @@ const Main = () => {
     setRegisteredRepos(prevRegisteredRepos);
   }, []);
 
+  useEffect(() => {
+    const prevIssues = JSON.parse(localStorage.getItem('issueData')) || [];
+    setIssues(prevIssues);
+  }, []);
+
   const handleChange = e => {
     setSearchValue(e.target.value);
+  };
+
+  const handleView = view => {
+    setCurrentView(view);
   };
 
   const getRepo = () => {
@@ -59,17 +71,59 @@ const Main = () => {
     return nextRegisteredRepos;
   };
 
+  const getIssue = repo => {
+    // registered repo 4개 이상일 시, issue 추가
+    if (registeredRepos.length > 3) {
+      return registeredRepos;
+    }
+
+    fetch(`https://api.github.com/repos/${repo}/issues`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/vnd.github.v3_json',
+      },
+    })
+      .then(res => res.json())
+      .then(res => {
+        const newIssues = [...issues];
+        res.forEach(issue => newIssues.push(issue));
+        const issueJson = JSON.stringify(newIssues);
+        localStorage.setItem('issueData', issueJson);
+        setIssues(newIssues);
+      });
+  };
+
+  const deleteIssue = repo => {
+    const nextIssues = issues.filter(
+      issue => issue.repository_url !== repo.url
+    );
+    const issueJson = JSON.stringify(nextIssues);
+    localStorage.setItem('issueData', issueJson);
+    setIssues(nextIssues);
+  };
+
   return (
     <>
-      <Nav handleChange={handleChange} handleSearch={handleSearch} />
+      <Nav
+        handleChange={handleChange}
+        handleSearch={handleSearch}
+        handleView={handleView}
+        currentView={currentView}
+      />
       <Container>
         <RegisteredRepos registeredRepos={registeredRepos} />
-        <RepositoryList
-          repositories={repositories.items}
-          registeredRepos={registeredRepos}
-          handleRegister={handleRegister}
-          handleDelete={handleDelete}
-        />
+        {currentView === 'repo' ? (
+          <RepositoryList
+            repositories={repositories.items}
+            registeredRepos={registeredRepos}
+            handleRegister={handleRegister}
+            handleDelete={handleDelete}
+            getIssue={getIssue}
+            deleteIssue={deleteIssue}
+          />
+        ) : (
+          <IssueList issues={issues} />
+        )}
       </Container>
     </>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import SearchBar from '../SearchBar/SearchBar';
 
-const Nav = ({ handleChange, handleSearch }) => {
+const Nav = ({ handleChange, handleSearch, handleView, currentView }) => {
   return (
     <Container>
       <Wrapper>
@@ -11,8 +11,18 @@ const Nav = ({ handleChange, handleSearch }) => {
           <SearchBar handleChange={handleChange} handleSearch={handleSearch} />
         </SearchBox>
         <MenuBox>
-          <Menu>Repo</Menu>
-          <Menu>Issue</Menu>
+          <Menu
+            isActive={currentView === 'repo'}
+            onClick={() => handleView('repo')}
+          >
+            Repo
+          </Menu>
+          <Menu
+            isActive={currentView === 'issue'}
+            onClick={() => handleView('issue')}
+          >
+            Issue
+          </Menu>
         </MenuBox>
       </Wrapper>
     </Container>
@@ -50,10 +60,12 @@ const Menu = styled.button`
   width: 50px;
   height: 50px;
   margin-right: 10px;
-  background-color: ${({ theme }) => theme.white};
+  background-color: ${({ theme, isActive }) =>
+    isActive ? theme.white : theme.skyblue};
   border-radius: 50%;
-  color: ${({ theme }) => theme.skyblue};
+  color: ${({ theme, isActive }) => (isActive ? theme.skyblue : theme.white)};
   font-size: 1rem;
+  cursor: pointer;
 `;
 
 export default Nav;

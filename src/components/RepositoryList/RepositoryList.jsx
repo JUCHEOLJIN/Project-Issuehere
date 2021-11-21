@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Empty from './Empty';
 import Repository from './Repository';
 
 const RepositoryList = ({
@@ -7,10 +8,15 @@ const RepositoryList = ({
   registeredRepos,
   handleRegister,
   handleDelete,
+  getIssue,
+  deleteIssue,
 }) => {
   return (
     <Container>
-      {repositories &&
+      {!repositories?.length ? (
+        <Empty />
+      ) : (
+        repositories &&
         repositories.map(item => (
           <Repository
             key={item.id}
@@ -18,13 +24,16 @@ const RepositoryList = ({
             registeredRepos={registeredRepos}
             handleRegister={handleRegister}
             handleDelete={handleDelete}
+            getIssue={getIssue}
+            deleteIssue={deleteIssue}
           />
-        ))}
+        ))
+      )}
     </Container>
   );
 };
 
-const Container = styled.div`
+const Container = styled.ul`
   margin-top: 16px;
 `;
 
