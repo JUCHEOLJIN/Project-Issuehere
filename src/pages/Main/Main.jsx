@@ -51,6 +51,14 @@ const Main = () => {
     return newRegisteredRepos;
   };
 
+  const handleDelete = repo => {
+    const nextRegisteredRepos = [...registeredRepos].filter(
+      item => item.id !== repo.id
+    );
+    setRegisteredRepos(nextRegisteredRepos);
+    return nextRegisteredRepos;
+  };
+
   return (
     <>
       <Nav handleChange={handleChange} handleSearch={handleSearch} />
@@ -60,6 +68,7 @@ const Main = () => {
           repositories={repositories.items}
           registeredRepos={registeredRepos}
           handleRegister={handleRegister}
+          handleDelete={handleDelete}
         />
       </Container>
     </>

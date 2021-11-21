@@ -2,7 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import Repository from './Repository';
 
-const RepositoryList = ({ repositories, handleRegister, registeredRepos }) => {
+const RepositoryList = ({
+  repositories,
+  registeredRepos,
+  handleRegister,
+  handleDelete,
+}) => {
   return (
     <Container>
       {repositories &&
@@ -12,6 +17,7 @@ const RepositoryList = ({ repositories, handleRegister, registeredRepos }) => {
             repository={item}
             registeredRepos={registeredRepos}
             handleRegister={handleRegister}
+            handleDelete={handleDelete}
           />
         ))}
     </Container>

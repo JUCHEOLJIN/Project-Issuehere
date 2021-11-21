@@ -1,11 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Repository = ({ repository, registeredRepos, handleRegister }) => {
-  const handleClick = async () => {
+const Repository = ({
+  repository,
+  registeredRepos,
+  handleRegister,
+  handleDelete,
+}) => {
+  const isRegistered = registeredRepos.some(item => item.id === repository.id);
+
+  const registerRepo = () => {
     const newRegisteredRepos = handleRegister(repository);
     const repositoryJson = JSON.stringify(newRegisteredRepos);
-    await localStorage.setItem('repoData', repositoryJson);
+    localStorage.setItem('repoData', repositoryJson);
+  };
+
+  const deleteRepo = () => {
+    const nextRegisteredRepos = handleDelete(repository);
+    const repositoryJson = JSON.stringify(nextRegisteredRepos);
+    localStorage.setItem('repoData', repositoryJson);
+  };
+
+  const handleClick = () => {
+    isRegistered ? deleteRepo() : registerRepo();
   };
 
   return (
@@ -14,7 +31,15 @@ const Repository = ({ repository, registeredRepos, handleRegister }) => {
         <Name>{repository.full_name}</Name>
         <Description>{repository.description}</Description>
       </TextBox>
-      <RegistrationButton onClick={handleClick}>등 록</RegistrationButton>
+      {isRegistered ? (
+        <RegistrationButton isRegistered={isRegistered} onClick={handleClick}>
+          취 소
+        </RegistrationButton>
+      ) : (
+        <RegistrationButton isRegistered={isRegistered} onClick={handleClick}>
+          등 록
+        </RegistrationButton>
+      )}
     </Container>
   );
 };
@@ -44,7 +69,8 @@ const TextBox = styled.div``;
 const RegistrationButton = styled.button`
   width: 100px;
   padding: 16px;
-  background-color: ${({ theme }) => theme.skyblue};
+  background-color: ${({ theme, isRegistered }) =>
+    isRegistered ? theme.red : theme.skyblue};
   border-radius: 6px;
   color: ${({ theme }) => theme.white};
   font-size: 1rem;
