@@ -10,6 +10,10 @@ const Nav = ({ handleChange, handleSearch }) => {
         <SearchBox>
           <SearchBar handleChange={handleChange} handleSearch={handleSearch} />
         </SearchBox>
+        <MenuBox>
+          <Menu>Repo</Menu>
+          <Menu>Issue</Menu>
+        </MenuBox>
       </Wrapper>
     </Container>
   );
@@ -23,6 +27,7 @@ const Container = styled.header`
 
 const Wrapper = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   max-width: 1280px;
   margin: 0 auto;
@@ -37,7 +42,18 @@ const Logo = styled.h1`
 const SearchBox = styled.div`
   display: flex;
   justify-content: center;
-  width: 80%;
+`;
+
+const MenuBox = styled.div``;
+
+const Menu = styled.button`
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  background-color: ${({ theme }) => theme.white};
+  border-radius: 50%;
+  color: ${({ theme }) => theme.skyblue};
+  font-size: 1rem;
 `;
 
 export default Nav;
