@@ -111,7 +111,10 @@ const Main = () => {
         currentView={currentView}
       />
       <Container>
-        <RegisteredRepos registeredRepos={registeredRepos} />
+        <RegisteredRepos
+          registeredRepos={registeredRepos}
+          handleDelete={handleDelete}
+        />
         {currentView === 'repo' ? (
           <RepositoryList
             repositories={repositories.items}
