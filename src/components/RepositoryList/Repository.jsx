@@ -64,7 +64,12 @@ const Name = styled.h3`
 `;
 
 const Description = styled.p`
+  max-width: 1100px;
   color: ${({ theme }) => theme.black};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
 `;
 
 const TextBox = styled.div``;

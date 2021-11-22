@@ -10,7 +10,7 @@ const Main = () => {
   const [repositories, setRepositories] = useState([]);
   const [registeredRepos, setRegisteredRepos] = useState([]);
   const [issues, setIssues] = useState([]);
-  const [currentView, setCurrentView] = useState('issue');
+  const [currentView, setCurrentView] = useState('repo');
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
