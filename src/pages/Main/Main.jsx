@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import IssueList from '../../components/IssueList/IssueList';
 import Nav from '../../components/Nav/Nav';
 import RegisteredRepos from '../../components/RegisteredRepos/RegisteredRepos';
 import RepositoryList from '../../components/RepositoryList/RepositoryList';
+import customFetch from '../../utills/customFetch';
+import { REPOS_API, ISSUES_API } from '../../config';
 
 const Main = () => {
   const [searchValue, setSearchValue] = useState('');
   const [repositories, setRepositories] = useState([]);
   const [registeredRepos, setRegisteredRepos] = useState([]);
+  const [issues, setIssues] = useState([]);
+  const [currentView, setCurrentView] = useState('repo');
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const prevRegisteredRepos =
@@ -15,24 +21,27 @@ const Main = () => {
     setRegisteredRepos(prevRegisteredRepos);
   }, []);
 
+  useEffect(() => {
+    const prevIssues = JSON.parse(localStorage.getItem('issueData')) || [];
+    setIssues(prevIssues);
+  }, []);
+
   const handleChange = e => {
     setSearchValue(e.target.value);
   };
 
-  const getRepo = () => {
-    fetch(`https://api.github.com/search/repositories?q=${searchValue}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/vnd.github.v3_json',
-      },
-    })
-      .then(res => res.json())
-      .then(res => setRepositories(res));
+  const handleView = view => {
+    setCurrentView(view);
   };
 
-  const handleSearch = (e, searchValue) => {
+  const getRepo = () => {
+    customFetch(REPOS_API + searchValue, setRepositories);
+  };
+
+  const handleSearch = e => {
     e.preventDefault();
     getRepo();
+    setCurrentView('repo');
   };
 
   const handleRegister = repo => {
@@ -59,17 +68,67 @@ const Main = () => {
     return nextRegisteredRepos;
   };
 
+  const getIssue = repo => {
+    // registered repo 4개 이상일 시, issue 추가
+    if (registeredRepos.length > 3) {
+      return registeredRepos;
+    }
+
+    const saveIssue = res => {
+      const newIssues = [...issues];
+      res.forEach(issue => newIssues.push(issue));
+      const issueJson = JSON.stringify(newIssues);
+      localStorage.setItem('issueData', issueJson);
+      setIssues(newIssues);
+    };
+
+    customFetch(`${ISSUES_API}/${repo}/issues`, saveIssue);
+  };
+
+  const deleteIssue = repo => {
+    const nextIssues = issues.filter(
+      issue => issue.repository_url !== repo.url
+    );
+    const issueJson = JSON.stringify(nextIssues);
+    localStorage.setItem('issueData', issueJson);
+    setIssues(nextIssues);
+  };
+
+  const handlePage = page => {
+    window.scrollTo(0, 0);
+    setCurrentPage(page);
+  };
+
   return (
     <>
-      <Nav handleChange={handleChange} handleSearch={handleSearch} />
+      <Nav
+        handleChange={handleChange}
+        handleSearch={handleSearch}
+        handleView={handleView}
+        currentView={currentView}
+      />
       <Container>
-        <RegisteredRepos registeredRepos={registeredRepos} />
-        <RepositoryList
-          repositories={repositories.items}
+        <RegisteredRepos
           registeredRepos={registeredRepos}
-          handleRegister={handleRegister}
           handleDelete={handleDelete}
+          deleteIssue={deleteIssue}
         />
+        {currentView === 'repo' ? (
+          <RepositoryList
+            repositories={repositories.items}
+            registeredRepos={registeredRepos}
+            handleRegister={handleRegister}
+            handleDelete={handleDelete}
+            getIssue={getIssue}
+            deleteIssue={deleteIssue}
+          />
+        ) : (
+          <IssueList
+            issues={issues}
+            currentPage={currentPage}
+            handlePage={handlePage}
+          />
+        )}
       </Container>
     </>
   );
