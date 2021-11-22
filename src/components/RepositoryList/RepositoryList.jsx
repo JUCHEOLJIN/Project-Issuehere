@@ -14,7 +14,7 @@ const RepositoryList = ({
   return (
     <Container>
       {!repositories?.length ? (
-        <Empty />
+        <Empty view="repo" />
       ) : (
         repositories &&
         repositories.map(item => (

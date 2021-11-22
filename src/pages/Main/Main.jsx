@@ -11,6 +11,7 @@ const Main = () => {
   const [registeredRepos, setRegisteredRepos] = useState([]);
   const [issues, setIssues] = useState([]);
   const [currentView, setCurrentView] = useState('issue');
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const prevRegisteredRepos =
@@ -42,9 +43,10 @@ const Main = () => {
       .then(res => setRepositories(res));
   };
 
-  const handleSearch = (e, searchValue) => {
+  const handleSearch = e => {
     e.preventDefault();
     getRepo();
+    setCurrentView('repo');
   };
 
   const handleRegister = repo => {
@@ -102,6 +104,11 @@ const Main = () => {
     setIssues(nextIssues);
   };
 
+  const handlePage = page => {
+    window.scrollTo(0, 0);
+    setCurrentPage(page);
+  };
+
   return (
     <>
       <Nav
@@ -114,6 +121,7 @@ const Main = () => {
         <RegisteredRepos
           registeredRepos={registeredRepos}
           handleDelete={handleDelete}
+          deleteIssue={deleteIssue}
         />
         {currentView === 'repo' ? (
           <RepositoryList
@@ -125,7 +133,11 @@ const Main = () => {
             deleteIssue={deleteIssue}
           />
         ) : (
-          <IssueList issues={issues} />
+          <IssueList
+            issues={issues}
+            currentPage={currentPage}
+            handlePage={handlePage}
+          />
         )}
       </Container>
     </>

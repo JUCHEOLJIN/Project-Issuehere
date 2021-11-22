@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const RegisteredRepos = ({ registeredRepos, handleDelete }) => {
+const RegisteredRepos = ({ registeredRepos, handleDelete, deleteIssue }) => {
   const deleteRepo = repository => {
     const nextRegisteredRepos = handleDelete(repository);
     const repositoryJson = JSON.stringify(nextRegisteredRepos);
     localStorage.setItem('repoData', repositoryJson);
+    deleteIssue(repository);
   };
 
   return (
@@ -28,7 +29,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   max-width: 1000px;
-  margin: 36px auto 0;
+  margin: 36px auto 16px;
   padding: 24px;
   background-color: #fafafa;
   border: 1px solid ${({ theme }) => theme.skyblue};
