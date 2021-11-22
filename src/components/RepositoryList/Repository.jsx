@@ -69,7 +69,6 @@ const Description = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-align: center;
 `;
 
 const TextBox = styled.div``;

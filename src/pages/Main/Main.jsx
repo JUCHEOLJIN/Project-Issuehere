@@ -4,6 +4,8 @@ import IssueList from '../../components/IssueList/IssueList';
 import Nav from '../../components/Nav/Nav';
 import RegisteredRepos from '../../components/RegisteredRepos/RegisteredRepos';
 import RepositoryList from '../../components/RepositoryList/RepositoryList';
+import customFetch from '../../utills/customFetch';
+import { REPOS_API, ISSUES_API } from '../../config';
 
 const Main = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -33,14 +35,7 @@ const Main = () => {
   };
 
   const getRepo = () => {
-    fetch(`https://api.github.com/search/repositories?q=${searchValue}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/vnd.github.v3_json',
-      },
-    })
-      .then(res => res.json())
-      .then(res => setRepositories(res));
+    customFetch(REPOS_API + searchValue, setRepositories);
   };
 
   const handleSearch = e => {
@@ -79,20 +74,15 @@ const Main = () => {
       return registeredRepos;
     }
 
-    fetch(`https://api.github.com/repos/${repo}/issues`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/vnd.github.v3_json',
-      },
-    })
-      .then(res => res.json())
-      .then(res => {
-        const newIssues = [...issues];
-        res.forEach(issue => newIssues.push(issue));
-        const issueJson = JSON.stringify(newIssues);
-        localStorage.setItem('issueData', issueJson);
-        setIssues(newIssues);
-      });
+    const saveIssue = res => {
+      const newIssues = [...issues];
+      res.forEach(issue => newIssues.push(issue));
+      const issueJson = JSON.stringify(newIssues);
+      localStorage.setItem('issueData', issueJson);
+      setIssues(newIssues);
+    };
+
+    customFetch(`${ISSUES_API}/${repo}/issues`, saveIssue);
   };
 
   const deleteIssue = repo => {
