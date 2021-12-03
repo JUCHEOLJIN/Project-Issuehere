@@ -1,4 +1,4 @@
-# Payhere Project - IssueHere
+# Project - IssueHere
 
 ## 프로젝트 설명
 
