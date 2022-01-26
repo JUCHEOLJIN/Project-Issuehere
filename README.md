@@ -14,7 +14,7 @@
 1. 검색창에 Repository명을 입력해서 Repository를 검색할 수 있다.
    - [x] Repository를 검색하여, repo 페이지에서 볼 수 있다.
    
-2. 검색된 Public Repository를 등록할 수 다.
+2. 검색된 Public Repository를 등록할 수 있다.
    - [x] 검색된 Repository를 등록 버튼을 눌러 등록할 수 있다.
    - [x] 최대 등록 개수는 4개로 제한한다.
    - [x] LocalStorage을 이용하여 저장한다.
